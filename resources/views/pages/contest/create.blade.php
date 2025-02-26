@@ -39,11 +39,11 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="status">Status</label>
+                        <label for="status">Status (Internal / External)</label>
                         <select id="status" name="status" class="form-select">
                             <option value="">Select Status</option>
-                            <option value="open">Open</option>
-                            <option value="closed">Closed</option>
+                            <option value="open">External</option>
+                            <option value="closed">Internal</option>
                         </select>
                     </div>
                     <div class="mb-3">
