@@ -16,7 +16,10 @@
                 @if($contest->type === "team" )
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEdit">Add Team Member</button>
                 @endif
-                <button data-id="{{ $contest->id }}" class="btn btn-danger btn-reset">Reset</button>
+                @if($contest->status === "closed")
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPoint">Add Point</button>
+                @endif
+                    <button data-id="{{ $contest->id }}" class="btn btn-danger btn-reset">Reset</button>
             </div>
         </div>
         <div class="row mt-3">
@@ -89,11 +92,79 @@
             </div>
         </div>
     </div>
+
+    <!-- Add Point Modal -->
+    <div class="modal fade" id="addPoint" tabindex="-1" aria-labelledby="addPointModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPointModalLabel">Add New Team Member</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addPointForm">
+                    <div class="modal-body">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="team" class="form-label">Team</label>
+                            <select name="team_id" id="team" class="form-select" required>
+                                <option value="">-- Select Team --</option>
+                                @foreach($teams as $team)
+                                    <option value="{{ $team->id }}">{{ $team->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="point" class="form-label">Point</label>
+                            <input type="number" name="point" id="point" class="form-control" placeholder="Enter point" required>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success" id="submitAddEdit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
     <script>
         $(document).ready(function () {
+
+            $('#addPointForm').submit(function (e) {
+                e.preventDefault();
+
+                let formData = new FormData(this);
+
+                $.ajax({
+                    url: '{{ route('admin.team-contest.add-point') }}',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: xhr.responseJSON.message,
+                        });
+                    }
+                });
+            });
 
             $('#addParticipant').click(function () {
                 let participantInput = `

@@ -75,6 +75,7 @@ Route::prefix('/')->group(function () {
                 Route::post('/{id}/generate-individual-contest', [TeamContestController::class, 'generateIndividualContest'])->name('admin.team-contest.generate-individual-contest');
                 Route::post('/{id}/store', [TeamContestController::class, 'store'])->name('admin.team-contest.store');
                 Route::post('/reset-score', [TeamContestController::class, 'resetScore'])->name('admin.team-contest.reset-score');
+                Route::post('/add-point', [TeamContestController::class, 'addPoint'])->name('admin.team-contest.add-point');
             });
 
             // Score

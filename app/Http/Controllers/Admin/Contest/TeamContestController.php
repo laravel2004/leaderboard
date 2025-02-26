@@ -45,6 +45,26 @@ class TeamContestController extends Controller
         return view('pages.contest.team.show', compact('teams', 'contest', 'participants'));
     }
 
+    public function addPoint(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'team_id' => 'required',
+                'point' => 'required',
+            ]);
+
+            $team = $this->team->find($validated['team_id']);
+            $team->update([
+                'score' => $team->score + $validated['point'],
+            ]);
+
+            return $this->successResponse(null, 'Point added successfully');
+        }
+        catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage());
+        }
+    }
+
     public function generateIndividualContest($id)
     {
         try {

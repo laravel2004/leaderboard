@@ -23,7 +23,12 @@ class ParticipantContestController extends Controller
     {
         $participant = auth('participant')->user();
         $members = MemberTeam::where('participant_id', $participant->id)->get();
-        $teams = Team::whereIn('id', $members->pluck('team_id'))->with('contest')->get();
+        $teams = Team::whereIn('id', $members->pluck('team_id'))
+            ->whereHas('contest', function ($query) {
+                $query->where('status', 'open');
+            })
+            ->with('contest')
+            ->get();
         return view('pages.user.contest.index', compact('teams'));
     }
 
