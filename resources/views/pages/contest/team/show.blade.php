@@ -98,7 +98,7 @@
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addPointModalLabel">Add New Team Member</h5>
+                    <h5 class="modal-title" id="addPointModalLabel">Add Point Team</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="addPointForm">
