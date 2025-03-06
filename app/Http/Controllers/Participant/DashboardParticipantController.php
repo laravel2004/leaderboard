@@ -15,4 +15,10 @@ class DashboardParticipantController extends Controller
         $contests = Contest::with('teams')->get();
         return view('pages.user.dashboard.index', compact('contests'));
     }
+
+    public function show($id)
+    {
+        $contest = Contest::where('id', $id)->with('teams')->first();
+        return view('pages.user.dashboard.show', compact('contest'));
+    }
 }

@@ -26,6 +26,7 @@ Route::prefix('/')->group(function () {
 
         Route::middleware([ParticipantAuthMiddleware::class])->group(function () {
             Route::get('dashboard', [DashboardParticipantController::class, 'index'])->name('participant.dashboard');
+            Route::get('dashboard/{id}', [DashboardParticipantController::class, 'show'])->name('participant.dashboard.show');
 
             // Contest
             Route::prefix('contest')->group(function () {
@@ -48,6 +49,11 @@ Route::prefix('/')->group(function () {
             $contests = Contest::with('teams')->get();
             return view('pages.dashboard.index', compact('contests'));
         })->name('admin.dashboard');
+
+        Route::get('admin/dashboard/{id}', function ($id) {
+            $contest = Contest::where('id', $id)->with('teams')->first();
+            return view('pages.dashboard.show', compact('contest'));
+        })->name('admin.dashboard.show');
 
         Route::prefix('panel')->group(function () {
             // Participant

@@ -8,68 +8,18 @@
 @section('subtitle', 'Leaderboard Participant')
 
 @section('content')
-    <section class="section">
+    <section class="section row mb-3">
         @forelse($contests as $contest)
-            <div class="card">
-                <div class="card-header text-center">
-                    <h4 class="card-title">Leaderboard {{ $contest->name }}</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead class="table-dark">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Score</th>
-                                <th scope="col">Rank</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @php
-                                // Urutkan berdasarkan skor tertinggi
-                                $sortedTeams = $contest->teams->sortByDesc('score');
-
-                                // Inisialisasi rank dan kategori medali
-                                $rank = 0;
-                                $prevScore = null;
-                                $medals = ['Gold', 'Silver', 'Bronze']; // Urutan medali
-                            @endphp
-
-                            @forelse($sortedTeams as $team)
-                                @php
-                                    // Jika skor berbeda dari sebelumnya, tingkatkan ranking
-                                    if ($team->score !== $prevScore) {
-                                        $rank++;
-                                    }
-                                    $prevScore = $team->score;
-
-                                    // Tentukan medali berdasarkan ranking
-                                    $medal = $rank <= 3 ? $medals[$rank - 1] : 'Participant';
-
-                                    // Pilih warna berdasarkan medali
-                                    $badgeClass = match($medal) {
-                                        'Gold' => 'bg-success',
-                                        'Silver' => 'bg-secondary',
-                                        'Bronze' => 'bg-warning',
-                                        default => 'bg-light text-dark',
-                                    };
-                                @endphp
-                                <tr>
-                                    <th scope="row">{{ $rank }}</th>
-                                    <td>{{ $team->name }}</td>
-                                    <td>{{ $team->score }}</td>
-                                    <td>
-                                        <span class="badge {{ $badgeClass }}">{{ $medal }}</span>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="text-center">No participant found.</td>
-                                </tr>
-                            @endforelse
-                            </tbody>
-                        </table>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4 overflow-hidden bg-light">
+                    <div class="card-body text-center p-4">
+                        <h5 class="card-title text-primary fw-bold text-uppercase mb-2">{{ $contest->name }}</h5>
+                        <div class="my-3">
+                            <span class="badge bg-dark px-3 py-2 text-uppercase">{{ $contest->type }}</span>
+                            <span class="badge bg-secondary px-3 py-2 text-uppercase">{{ $contest->status }}</span>
+                        </div>
+                        <p class="text-muted small mb-3 fw-medium">{{ \Carbon\Carbon::parse($contest->start_date)->format('M d, Y') }} - {{ \Carbon\Carbon::parse($contest->end_date)->format('M d, Y') }}</p>
+                        <a href="{{ route('participant.dashboard.show', ['id' => $contest->id]) }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold shadow-sm">View Leaderboard</a>
                     </div>
                 </div>
             </div>
